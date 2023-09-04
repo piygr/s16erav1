@@ -197,6 +197,6 @@ def collate_fn(batch):
         label=torch.vstack(label),
         encoder_mask=torch.vstack(encoder_mask),
         decoder_mask=torch.vstack(decoder_mask),
-        src_text=torch.vstack(src_text),
-        tgt_text=torch.vstack(tgt_text)
+        src_text=src_text,
+        tgt_text=tgt_text
     )

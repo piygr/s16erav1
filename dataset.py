@@ -186,7 +186,7 @@ def collate_fn(batch):
         encoder_input.append( b['encoder_input'][:encoder_input_max])
         decoder_input.append( b['decoder_input'][:decoder_input_max])
         encoder_mask.append( (b['encoder_mask'][0, 0, :encoder_input_max]).unsqueeze(0).unsqueeze(0).unsqueeze(0) )
-        decoder_mask.append( (b['decoder_mask'][0, :decoder_input_max, :decoder_input_max]).unsqueeze(0) )
+        decoder_mask.append( (b['decoder_mask'][0, :decoder_input_max, :decoder_input_max]).unsqueeze(0).unsqueeze(0)  )
         label.append( b['label'][:decoder_input_max])
         src_text.append( b['src_text'] )
         tgt_text.append( b['tgt_text'] )

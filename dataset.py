@@ -144,7 +144,7 @@ def get_dataloader(cfg):
 
     train_ds, val_ds = random_split(ds, [train_ds_size, val_ds_size])
 
-    '''
+
     max_len_src = 0
     max_len_tgt = 0
 
@@ -157,7 +157,7 @@ def get_dataloader(cfg):
 
     print(f"Maximum length of source - {max_len_src}")
     print(f"Maximum length of target - {max_len_tgt}")
-    '''
+    
 
     train_dataloader = DataLoader(train_ds, batch_size=cfg['batch_size'], shuffle=True, collate_fn=collate_fn)
     val_dataloader = DataLoader(val_ds, batch_size=1, shuffle=True)

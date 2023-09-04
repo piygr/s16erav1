@@ -114,7 +114,7 @@ class MultiHeadAttentionBlock(nn.Module):
         attention_scores = (query @ key_t) / math.sqrt(d_k) # (batch, h, seq_len, seq_len)
         if mask is not None:
             # setting -inf to mask values = 0
-            attention_scores.masked_fill_(mask == 0, -1e6)
+            attention_scores.masked_fill_(mask == 0, -1e4)
 
         attention_scores = attention_scores.softmax(dim = -1)
 

@@ -1,150 +1,294 @@
-# Session 15 Assignment
-To build a full transformer for language translation (Only to run for 10 epochs of training)
-
+# Session 16 Assignment
+Building a full transformer for language translation 
+### Instructions
+- Pick the "en-fr" dataset from opus_books
+- Remove all English sentences with more than 150 "tokens"
+- Remove all french sentences where len(fench_sentences) > len(english_sentrnce) + 10
+- Train your own transformer (E-D) (do anything you want, use PyTorch, OCP, PS, AMP, etc), but get your loss under 1.8
 ## Transformer Architecture
 <img width="1013" alt="transformers" src="https://github.com/piygr/s15erav1/assets/135162847/610de7d6-d869-4841-bb79-ee43ba1a692e">
 
 
 ------
-## models/TransformerV1Lightning.py
-The file contains **TransformerV1LightningModel** - a Transformer model written in pytorch-lightning as desired in the assignment. 
+## models/TransformerV2Lightning.py
+The file contains **TransformerV2LightningModel** - a Transformer model written in pytorch-lightning as desired in the assignment. 
 
 Here is the summary of the network -
 
 ```
   | Name             | Type               | Params
 --------------------------------------------------------
-0 | encoder          | Encoder            | 12.6 M
-1 | decoder          | Decoder            | 18.9 M
-2 | projection_layer | ProjectionLayer    | 11.5 M
-3 | src_embed        | InputEmbeddings    | 8.0 M 
-4 | tgt_embed        | InputEmbeddings    | 11.5 M
+0 | encoder          | Encoder            | 6.3 M 
+1 | decoder          | Decoder            | 9.4 M 
+2 | projection_layer | ProjectionLayer    | 15.4 M
+3 | src_embed        | InputEmbeddings    | 15.4 M
+4 | tgt_embed        | InputEmbeddings    | 15.4 M
 5 | src_pos          | PositionalEncoding | 0     
 6 | tgt_pos          | PositionalEncoding | 0     
 7 | loss_fn          | CrossEntropyLoss   | 0     
 --------------------------------------------------------
-62.5 M    Trainable params
+61.8 M    Trainable params
 0         Non-trainable params
-62.5 M    Total params
-250.151   Total estimated model params size (MB)
+61.8 M    Total params
+247.392   Total estimated model params size (MB)
 ```
 
 ## dataset.py
-opus_books - HuggingFace dataset & tokenizer is used as raw dataset. The translation language pair is en (English) to it (Italian).
+opus_books - HuggingFace dataset & tokenizer is used as raw dataset. The translation language pair is en (English) to fr (French).
 
-## S15.ipynb
+## S16.ipynb
 The file is an IPython notebook. This was run separately in Kaggle to train the model.
 
 
 ```
 Epoch  0
-Train Loss: 6.412225
-Validation Loss: 5.671622
+Train Loss: 5.837872
 ------
-SOURCE := [The next morning we would read that it was going to be a "warm, fine to set-fair day; much heat;" and we would dress ourselves in flimsy things, and go out, and, half-an-hour after we had started, it would commence to rain hard, and a bitterly cold wind would spring up, and both would keep on steadily for the whole day, and we would come home with colds and rheumatism all over us, and go to bed.]
-EXPECTED := ['La mattina appresso leggemmo che sarebbe stata una «bella, calda, giornata». Ci vestimmo con gli abiti leggeri, e uscimmo, e mezz’ora dopo che eravamo partiti, si scatenò una fortissima pioggia, e si mise a imperversare un vento terribilmente freddo che durò tutto il giorno.']
-PREDICTED := ['E il suo momento , che si a un ’ altro che la mia , e , e , e , e , e , e , e , e , e , e , e , e , e , e , e .']
-Validation cer: 0.7381818294525146
-Validation wer: 0.9545454382896423
+SOURCE := [The reader will remember that these men were mixed up in the secret politics of Louis XI.]
+EXPECTED := ['On se souvient que ces deux hommes étaient mêlés à la politique secrète de Louis XI.']
+PREDICTED := ['Le monde me ces hommes étaient dans le roi .']
+Validation cer: 0.5714285969734192
+Validation wer: 0.8125
 Validation BLEU: 0.0
 --------------------
 Epoch  1
-Train Loss: 5.675857
-Validation Loss: 5.255237
+Train Loss: 4.447019
 ------
-SOURCE := [When he had done, instead of feeling better, calmer, more enlightened by his discourse, I experienced an inexpressible sadness; for it seemed to me--I know not whether equally so to others--that the eloquence to which I had been listening had sprung from a depth where lay turbid dregs of disappointment--where moved troubling impulses of insatiate yearnings and disquieting aspirations.]
-EXPECTED := ['Quando egli ebbe terminato, invece di sentirmi più calma, più illuminata, provai una grande tristezza, perché mi pareva che quella eloquenza sgorgasse da una sorgente avvelenata da amare delusioni, e nella quale si agitavano desiderii insoddisfatti e aspirazioni angosciose.']
-PREDICTED := ['Quando era stato , come se mi aveva fatto , e mi , e mi , e mi , e mi , e mi , e mi , e non mi , e mi , e mi .']
-Validation cer: 0.7372262477874756
-Validation wer: 0.9230769276618958
+SOURCE := [Monsieur Porthos!" cried the procurator’s wife. "I have been wrong; I see it. I ought not to have driven a bargain when it was to equip a cavalier like you."]
+EXPECTED := ["«Monsieur Porthos! monsieur Porthos! s'écria la procureuse, j'ai tort, je le reconnais, je n'aurais pas dû marchander quand il s'agissait d'équiper un cavalier comme vous!»"]
+PREDICTED := ["-- Monsieur Porthos ! s ' écria la procureuse ; je suis bien sûr ; je ne sais pas , je ne serais pas obligé de m ' avoir été quand il était à un cavalier comme vous ."]
+Validation cer: 0.5058139562606812
+Validation wer: 1.2000000476837158
 Validation BLEU: 0.0
 --------------------
 Epoch  2
-Train Loss: 5.297083
-Validation Loss: 4.992411
+Train Loss: 3.807128
 ------
-SOURCE := [You think all existence lapses in as quiet a flow as that in which your youth has hitherto slid away.]
-EXPECTED := ['"Voi credete che tutta la vita sia calma come la vostra giovinezza.']
-PREDICTED := ['Tu , come vi , come un uomo che ha fatto un uomo che ha fatto la vostra opinione .']
-Validation cer: 0.7761194109916687
-Validation wer: 1.4166666269302368
+SOURCE := ["I was privately married, and I retired from the stage.]
+EXPECTED := ["-- Je me suis mariée secrètement et j'ai quitté le théâtre."]
+PREDICTED := ["-- J ' ai été marié , et je me mis à la scène ."]
+Validation cer: 0.6271186470985413
+Validation wer: 1.1818181276321411
 Validation BLEU: 0.0
 --------------------
 Epoch  3
-Train Loss: 4.993914
-Validation Loss: 4.831674
+Train Loss: 3.462492
 ------
-SOURCE := [His natural feelings prompted him to justify himself and prove that she was in the wrong; but to prove her in the wrong would mean irritating her still more, and widening the breach which was the cause of all the trouble.]
-EXPECTED := ['Un sentimento istintivo pretendeva la giustificazione e la dimostrazione della colpa di lei; ma mostrare la colpa di lei significava irritarla maggiormente e aumentare quel distacco che era la causa di tutta la pena.']
-PREDICTED := ['La sua vita era sempre sempre più di lui e che la sua situazione era stata in lui ; ma la sua cosa si era sempre più forte , e che la sua vita era stata sempre più di lui .']
-Validation cer: 0.6527777910232544
-Validation wer: 1.058823585510254
+SOURCE := [It would not have been wise to tell how we came there. The superstitious Italians would have set us down for fire-devils vomited out of hell; so we presented ourselves in the humble guise of shipwrecked mariners.]
+EXPECTED := ["Dire comment nous étions arrivés dans l'île ne nous parut pas prudent: l'esprit superstitieux des Italiens n'eût pas manqué de voir en nous dés démons vomis du sein des enfers; il fallut donc, se résigner à passer pour d'humbles naufragés."]
+PREDICTED := ["Ce n ' eût pas été sage de dire à quel moment nous arrivâmes ; le nous aurait mis à tirer pour tirer pour feu des diables d ' enfer ; si nous nous nous en somme de naufragés ."]
+Validation cer: 0.6485355496406555
+Validation wer: 1.0
 Validation BLEU: 0.0
 --------------------
 Epoch  4
-Train Loss: 4.728517
-Validation Loss: 4.722586
+Train Loss: 3.251329
 ------
-SOURCE := [He bowed, still not taking his eyes from the group of the dog and child.]
-EXPECTED := ['Egli chinò la testa, senza togliere lo sguardo dalla bambina e dal cane, e disse:']
-PREDICTED := ['Egli si alzò , non si , si dalla poltrona e la vecchia bambina .']
-Validation cer: 0.6419752836227417
-Validation wer: 0.800000011920929
+SOURCE := ["We had been a fortnight at the bottom of a hole undermining the railway, and it was not the imperial train that was blown up, it was a passenger train.]
+EXPECTED := ["Nous étions restés quatorze jours au fond d'un trou, a miner la voie du chemin de fer; et ce n'est pas le train impérial, c'est un train de voyageurs qui a sauté…"]
+PREDICTED := ["-- Nous avions quinze jours au fond d ' un trou , et ce n ' était pas le train de qui fut tiré , c ' était un train de voyage ."]
+Validation cer: 0.5493826866149902
+Validation wer: 0.90625
 Validation BLEU: 0.0
 --------------------
 Epoch  5
-Train Loss: 4.480361
-Validation Loss: 4.652407
+Train Loss: 3.108443
 ------
-SOURCE := [When the wife left the box the husband loitered behind, trying to catch Anna's eye and evidently wishing to bow to her.]
-EXPECTED := ['Quando la moglie uscì, il marito si attardò a lungo, cercando con gli occhi lo sguardo di Anna, con l’evidente desiderio di salutarla.']
-PREDICTED := ['Quando la moglie si avvicinò alla contessa , si mise a sedere , cercando di e si mise a .']
-Validation cer: 0.611940324306488
-Validation wer: 0.8260869383811951
+SOURCE := [During all this time I can only once remember that there was the slightest disagreement between him and my mother.]
+EXPECTED := ["Je ne me souviens pas qu'il y ait eu le moindre désaccord entre lui et ma mère, excepté une fois."]
+PREDICTED := ["Pendant tout ce temps , je ne puis me rappeler qu ' une fois , c ' était le moindre cadence entre lui et ma mère ."]
+Validation cer: 0.8041236996650696
+Validation wer: 1.0499999523162842
 Validation BLEU: 0.0
 --------------------
 Epoch  6
-Train Loss: 4.246380
-Validation Loss: 4.611298
+Train Loss: 2.987513
 ------
-SOURCE := [When the wife left the box the husband loitered behind, trying to catch Anna's eye and evidently wishing to bow to her.]
-EXPECTED := ['Quando la moglie uscì, il marito si attardò a lungo, cercando con gli occhi lo sguardo di Anna, con l’evidente desiderio di salutarla.']
-PREDICTED := ['Quando la moglie si avvicinò alla stazione , Aleksej Aleksandrovic si mise a , cercando di l ’ occhio e , evidentemente , si mise a .']
-Validation cer: 0.611940324306488
-Validation wer: 0.9130434989929199
+SOURCE := ["Ugh!" cried Gringoire, "what a great king is here!"]
+EXPECTED := ['– Ouf ! s’écria Gringoire, que voilà un grand roi ! »']
+PREDICTED := ['« Hum ! cria Gringoire , qu ’ est là - bas ! »']
+Validation cer: 0.43396225571632385
+Validation wer: 0.9166666865348816
 Validation BLEU: 0.0
 --------------------
 Epoch  7
-Train Loss: 4.015939
-Validation Loss: 4.594482
+Train Loss: 2.877975
 ------
-SOURCE := [“However, my old friend,” says he, “you shall not want a supply in your necessity; and as soon as my son returns you shall be fully satisfied.” Upon this he pulls out an old pouch, and gives me one hundred and sixty Portugal moidores in gold; and giving the writings of his title to the ship, which his son was gone to the Brazils in, of which he was quarter-part owner, and his son another, he puts them both into my hands for security of the rest.]
-EXPECTED := ['Ciò non ostante il mio buon capitano confessò d’andarmi debitore di quattrocento settanta moidori d’oro oltre al valore di sessanta casse di zucchero, e di quindici doppi rotoli di tabacco, le quali mercanzie avea perdute insieme con la nave che le portava, per un naufragio cui quel poveretto soggiacque nel tornare a Lisbona undici anni dopo la mia partenza. Qui mi raccontò come si trovasse costretto a valersi del mio danaro, per riparare i sofferti danni e comperarsi una parte di proprietà in altro vascello mercantile.']
-PREDICTED := ['« Ma il mio vecchio capitano non si può , e non potete dir vero che la vostra vita non in me ; e la vostra storia si di questo figlio , e di e di in un ’ antica piantagione , e di in un ’ altra parte del figlio , e di che fu il capitano . — « La mia piantagione , in un ’ altra parte , il mio figlio , mi ha fatto che il mio figlio si , e la mia scialuppa , e la mia storia .']
-Validation cer: 0.691428542137146
-Validation wer: 1.0116279125213623
+SOURCE := [Adieu, ma Clélia, je bénis ma mort puisqu’elle a été l’occasion de mon bonheur.]
+EXPECTED := ['Farewell, my Clelia, I bless my death since it has been the cause of my happiness."']
+PREDICTED := ['Good - bye , my Signora , I shall have my death since she was an opportunity of my happiness .']
+Validation cer: 0.5542168617248535
+Validation wer: 0.9375
 Validation BLEU: 0.0
 --------------------
 Epoch  8
-Train Loss: 3.793747
-Validation Loss: 4.627824
+Train Loss: 2.706892
 ------
-SOURCE := [Was it suspected that this lunatic, Mrs. Rochester, had any hand in it?"]
-EXPECTED := ['i sospetti non son caduti sulla pazza?']
-PREDICTED := ['È forse che quella signora Fairfax , che era stata in mano ?']
-Validation cer: 1.1578947305679321
-Validation wer: 1.8571428060531616
+SOURCE := [I have myself set an example by making a match with Sir Lothian Hume, the terms of which will be communicated to you by that gentleman."]
+EXPECTED := ["J'en ai moi-même donné l'exemple en faisant avec Sir Lothian Hume un match dont les conditions vont vous être communiquées par ce gentleman."]
+PREDICTED := ['Je me suis mis au exemple en faisant un mariage avec Sir Lothian Hume , dont les termes vous seront par ce gentleman .']
+Validation cer: 0.4714285731315613
+Validation wer: 0.695652186870575
 Validation BLEU: 0.0
 --------------------
 Epoch  9
-Train Loss: 3.579768
-Validation Loss: 4.650926
+Train Loss: 2.531077
 ------
-SOURCE := ['Because it means going goodness knows where, and by what roads! to what inns!]
-EXPECTED := ['— Perché andare Dio sa dove, chi sa per quali strade, in quali alberghi.']
-PREDICTED := ['— Perché lo , dove ne parla , e che cosa si tratta di questa primavera !']
-Validation cer: 0.6666666865348816
-Validation wer: 1.0714285373687744
+SOURCE := [One of them was suddenly shut off.]
+EXPECTED := ['L’une d’elles s’effaça brusquement.']
+PREDICTED := ['L ’ un d ’ eux fut brusquement close .']
+Validation cer: 0.6571428775787354
+Validation wer: 2.5
+Validation BLEU: 0.0
+--------------------
+Epoch  10
+Train Loss: 2.371687
+------
+SOURCE := [But she managed only to exasperate Meaulnes.]
+EXPECTED := ['Mais elle ne fit qu’exaspérer Meaulnes.']
+PREDICTED := ['Mais elle ne réussit qu ’ à exaspérer Meaulnes .']
+Validation cer: 0.25641027092933655
+Validation wer: 1.1666666269302368
+Validation BLEU: 0.0
+--------------------
+Epoch  11
+Train Loss: 2.238340
+------
+SOURCE := ["A strange wish, Mrs. Reed; why do you hate her so?"]
+EXPECTED := ['-- Étrange désir, madame Reed! Pourquoi la haïssiez-vous?']
+PREDICTED := ['-- Un étrange désir , madame Reed ; pourquoi la - vous ainsi ?']
+Validation cer: 0.3684210479259491
+Validation wer: 1.375
+Validation BLEU: 0.0
+--------------------
+Epoch  12
+Train Loss: 2.115552
+------
+SOURCE := [I've the eye of an American!"]
+EXPECTED := ['J’ai l’oeil américain.']
+PREDICTED := ["J ' ai l ' oeil d ' un Américain ?"]
+Validation cer: 0.7272727489471436
+Validation wer: 3.6666667461395264
+Validation BLEU: 0.0
+--------------------
+Epoch  13
+Train Loss: 2.011159
+------
+SOURCE := ["Oh, I cannot believe you!"]
+EXPECTED := ['-- Oh! je ne puis vous croire!']
+PREDICTED := ['-- Oh ! je ne puis vous croire !']
+Validation cer: 0.06666667014360428
+Validation wer: 0.5714285969734192
+Validation BLEU: 0.0
+--------------------
+Epoch  14
+Train Loss: 1.926809
+------
+SOURCE := [A single man of large fortune; four or five thousand a year.]
+EXPECTED := ['Quatre ou cinq mille livres de rente !']
+PREDICTED := ['Un seul homme de grande fortune , quatre ou cinq mille ans de rentes .']
+Validation cer: 1.105263113975525
+Validation wer: 1.375
+Validation BLEU: 0.0
+--------------------
+Epoch  15
+Train Loss: 1.871439
+------
+SOURCE := ["Oh, yes; I am," added the king, taking a handful of gold from La Chesnaye, and putting it into the hand of d’Artagnan.]
+EXPECTED := ["-- Oui, je le suis, ajouta le roi en prenant une poignée d'or de la main de La Chesnaye, et la mettant dans celle de d'Artagnan."]
+PREDICTED := ["-- Oh ! oui , je suis , ajouta le roi en prenant une poignée d ' or de La Chesnaye , et qu ' il l ' a remise à d ' Artagnan ."]
+Validation cer: 0.3515625
+Validation wer: 0.9230769276618958
+Validation BLEU: 0.0
+--------------------
+Epoch  16
+Train Loss: 1.849386
+------
+SOURCE := [Its unstable color would change with tremendous speed as the animal grew irritated, passing successively from bluish gray to reddish brown.]
+EXPECTED := ["Sa couleur inconstante, changeant avec une extrême rapidité suivant l'irritation de l'animal, passait successivement du gris livide au brun rougeâtre."]
+PREDICTED := ['Cette rapidité devait être avec une rapidité extrême , car le fauve , passant successivement par le doux bruissement des eaux rougeâtres .']
+Validation cer: 0.5933333039283752
+Validation wer: 0.949999988079071
+Validation BLEU: 0.0
+--------------------
+Epoch  17
+Train Loss: 1.830442
+------
+SOURCE := [After a long interval, when they were able to speak:]
+EXPECTED := ['Bien longtemps après, quand on put parler :']
+PREDICTED := ['Après un long moment , quand on put parler :']
+Validation cer: 0.39534884691238403
+Validation wer: 0.625
+Validation BLEU: 0.0
+--------------------
+Epoch  18
+Train Loss: 1.815035
+------
+SOURCE := [His face became convulsed, his limbs rigid, his nerves could be seen knotting beneath his skin.]
+EXPECTED := ['Sa face se convulsionnait, ses membres se raidissaient; on voyait que les nerfs se nouaient en lui.']
+PREDICTED := ['Il avait la figure , les membres raidis , le visage contenu , il voyait sous sa peau .']
+Validation cer: 0.6565656661987305
+Validation wer: 1.058823585510254
+Validation BLEU: 0.0
+--------------------
+Epoch  19
+Train Loss: 1.801223
+------
+SOURCE := [He had lived at court and slept in the bed of queens!]
+EXPECTED := ['Il avait vécu à la Cour et couché dans le lit des reines!']
+PREDICTED := ['Et il avait vécu en cour , il dormait au lit !']
+Validation cer: 0.5789473652839661
+Validation wer: 0.8461538553237915
+Validation BLEU: 0.0
+--------------------
+Epoch  20
+Train Loss: 1.789502
+------
+SOURCE := ["However," observed Cyrus Harding, "here we are in an impregnable position.]
+EXPECTED := ['«Toutefois, fit observer Cyrus Smith, nous sommes ici dans une situation inexpugnable.']
+PREDICTED := ['« Cependant , fit observer Cyrus Smith , nous sommes ici dans une position .']
+Validation cer: 0.3255814015865326
+Validation wer: 0.5833333134651184
+Validation BLEU: 0.0
+--------------------
+Epoch  21
+Train Loss: 1.778268
+------
+SOURCE := ["Oh! that's where it is, is it?" replied the man; "well, you take my advice and go there quietly, and take that watch of yours with you; and don't let's have any more of it."]
+EXPECTED := ['« Ah ! c’est la que vous logez, dites-vous ? reprit l’homme. Eh bien, je vous conseille de remettre votre montre dans votre poche et de rentrer chez vous tranquillement.']
+PREDICTED := ["-- Oh ! c ' est là , c ' est cela ? répondit l ' homme . Eh bien , prenez mon conseil et y allez tranquillement , prenez cette montre de la vôtre à votre égard , et ne vous en inquiétez pas davantage ."]
+Validation cer: 0.6804733872413635
+Validation wer: 1.3666666746139526
+Validation BLEU: 0.0
+--------------------
+Epoch  22
+Train Loss: 1.770308
+------
+SOURCE := [I was at school at the time, and the adventure appeared to me to be cruel for the king."]
+EXPECTED := ["J'étais au séminaire à cette époque, et l'aventure me parut cruelle pour le roi."]
+PREDICTED := ["J ' étais à l ' école au moment où l ' aventure me parut cruelle pour le roi ."]
+Validation cer: 0.375
+Validation wer: 1.0
+Validation BLEU: 0.0
+--------------------
+Epoch  23
+Train Loss: 1.762439
+------
+SOURCE := [By the date of the tests, April, 189-I realized that Meaulnes had started it only a few days before leaving Sainte-Agathe.]
+EXPECTED := ['À la date des devoirs, avril 1892… je reconnus que Meaulnes l’avait commencé peu de jours avant de quitter Sainte-Agathe.']
+PREDICTED := ['À la date du , avril , je compris que Meaulnes était parti depuis quelques jours seulement avant de quitter Sainte - Agathe .']
+Validation cer: 0.44628098607063293
+Validation wer: 0.6499999761581421
+Validation BLEU: 0.0
+--------------------
+Epoch  24
+Train Loss: 1.757182
+------
+SOURCE := [And the innkeeper, who was very excited, talked more freely, repeating that he only asked possibilities from the masters, without demanding, like so many others, things that were too hard to get.]
+EXPECTED := ["Et le cabaretier, tres excité, se livra davantage, tout en répétant qu'il demandait seulement le possible aux patrons, sans exiger, comme tant d'autres, des choses trop dures a obtenir."]
+PREDICTED := ["Et le cabaretier , qui était tres ému , parlait plus longuement , répétait qu ' il ne demandait rien a des maîtres sans demander , comme des autres choses , trop difficiles a trouver ."]
+Validation cer: 0.5351351499557495
+Validation wer: 1.0
 Validation BLEU: 0.0
 --------------------
 ```

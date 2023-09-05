@@ -144,6 +144,8 @@ def get_dataloader(cfg):
 
     train_ds, val_ds = random_split(ds, [train_ds_size, val_ds_size])
 
+    print('Train DS Size - ', train_ds_size)
+    print('Val DS Size - ', val_ds_size)
 
     max_len_src = 0
     max_len_tgt = 0
@@ -160,7 +162,7 @@ def get_dataloader(cfg):
 
 
     train_dataloader = DataLoader(train_ds, batch_size=cfg['batch_size'], shuffle=True, collate_fn=collate_fn)
-    val_dataloader = DataLoader(val_ds, batch_size=1, shuffle=True)
+    val_dataloader = DataLoader(val_ds, batch_size=1, shuffle=False)
 
     return train_dataloader, val_dataloader, ds.tokenizer_src, ds.tokenizer_tgt
 

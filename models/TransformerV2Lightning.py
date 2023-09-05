@@ -333,16 +333,11 @@ class TransformerV2LightningModel(pl.LightningModule):
 
         self.metric['total_val_steps'] += 1
         self.metric['epoch_val_steps'] += 1
-        self.metric['epoch_val_loss'].append(loss.item())
+        self.metric['epoch_val_loss'].append(loss.item())'''
 
         batch_count = self.trainer.num_val_batches[0]
         if random.randint(1, batch_count) > batch_idx:
-            self.last_val_batch = val_batch'''
-
-        val_batch_count = self.trainer.num_val_batches[0]
-        val_batch_idx = random.randint(0, val_batch_count-1)
-        self.last_val_batch = self.trainer.val_dataloaders[val_batch_idx]
-
+            self.last_val_batch = val_batch
 
 
     #def on_train_epoch_end(self):

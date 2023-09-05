@@ -315,9 +315,9 @@ class TransformerV2LightningModel(pl.LightningModule):
 
         return loss
 
-    '''def validation_step(self, val_batch, batch_idx):
+    def validation_step(self, val_batch, batch_idx):
         #print('--VAL STEP--')
-        encoder_input = val_batch['encoder_input']
+        '''encoder_input = val_batch['encoder_input']
         decoder_input = val_batch['decoder_input']
         encoder_mask = val_batch['encoder_mask']
         decoder_mask = val_batch['decoder_mask']
@@ -339,9 +339,14 @@ class TransformerV2LightningModel(pl.LightningModule):
         if random.randint(1, batch_count) > batch_idx:
             self.last_val_batch = val_batch'''
 
+        val_batch_count = self.trainer.num_val_batches[0]
+        val_batch_idx = random.randint(0, val_batch_count-1)
+        self.last_val_batch = self.trainer.val_dataloaders[val_batch_idx]
+
+
 
     #def on_train_epoch_end(self):
-    def on_train_epoch_end(self):
+    def on_validation_epoch_end(self):
         if self.metric['epoch_train_steps'] > 0:
             print('Epoch ', self.current_epoch)
 
@@ -368,9 +373,6 @@ class TransformerV2LightningModel(pl.LightningModule):
             self.metric['epoch_val_loss'] = []'''
             print('------')
 
-            val_batch_count = self.trainer.num_val_batches[0]
-            val_batch_idx = random.randint(0, val_batch_count-1)
-            self.last_val_batch = self.trainer.val_dataloaders[val_batch_idx]
             run_validation(self, self.last_val_batch, self.tokenizer_src, self.tokenizer_tgt, self.cfg['seq_len'])
 
             print('--------------------')
